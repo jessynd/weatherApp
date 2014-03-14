@@ -1,6 +1,7 @@
 var weather;
 var lat;
 var lon;
+var city;
 $(function() {
 			// write a function to go get the weather
 
@@ -12,6 +13,7 @@ $(function() {
 					success : function(data){
 						//if there is no data observation
 						// ! means if there is no (not)
+						console.log(data);
 						if(!data.current_observation) {
 							$('h1.weather').text("Please be more specific");
 							return false; //abandon all ship
@@ -42,13 +44,13 @@ $(function() {
 
 	$(".cityForm").on("submit", function(e){
 			e.preventDefault();
-			var city = $('input[name="city"]').val();
+			city = $('input[name="city"]').val();
 			goGetTheWeather(city);
 
 	}); //end Form stuff
 
 	var getTwit = function(){
-		$.ajax("http://noauth.jit.su/1.1/search/tweets.json?q=" + weather + "&geocode=" + lat +  "," + lon + "," + "50mi" + "&count=5",{
+		$.ajax("http://noauth.jit.su/1.1/search/tweets.json?q=" + weather + "&geocode=" + lat +  "," + lon + "," + "50mi" + "&count=20" + "&result_type=popular" + "%23dlws",{
 			type : 'GET',
 			dataType : 'jsonp',
 			success : function(twitterdata){
@@ -58,18 +60,24 @@ $(function() {
 				}
 				console.log(twitterdata);
 					var t = twitterdata.statuses;
-					var tweet = t[0].text;
+					var tweet = t[Math.floor((Math.random()*t.length))].text;
 					$("h1").fadeIn("slow", function(){
 						$("h1").text(tweet);
 						$("h1").addClass("h1Back");
 					}); //fadeIn tweet
+					var googlePhoto = "http://maps.googleapis.com/maps/api/streetview?size=1000x800&location=" + encodeURI(city) + "&sensor=false&fov=120&pitch=10";
+					console.log(googlePhoto);
+				$("body").css({
+					"background-image": "url(" + googlePhoto + ")",
+					"background-size" : "cover",
+					"background-position" : "center",
+					"background-repeat" : "no-repeat",
+					
+				})
 			} // function(twitterdata) 
 		}); //end twit ajax
-
 	}; // getTwit
-
 }); //document ready
-
 
 
 // SHOULD WE NEED AN IF STATEMENT ONE DAY... THIS IS WRITTEN

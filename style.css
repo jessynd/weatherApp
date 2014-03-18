@@ -2,6 +2,10 @@ body {
   font-family: sans-serif;
   background: #EEE; }
 
+h1 {
+  width: 80%;
+}
+
 form {
   width: 50%;
   margin: 0 auto;
